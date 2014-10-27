@@ -25,7 +25,8 @@ import (
 
 
 type Param struct {
-    IsJson   bool               `json:"is_json"`
+    IsJson  bool                `json:"is_json"`
+    Verbose bool                `json:"verbose"`
     Method  string              `json:"method"`
     URL     string              `json:"url"`
     Header  map[string]string   `json:"header"`
@@ -34,7 +35,7 @@ type Param struct {
 
 
 func Version() string {
-    return "0.1.1"
+    return "0.2.0"
 }
 
 
@@ -51,6 +52,7 @@ func License() string {
 func main() {
     param := Param{
         true,
+        false,
         "GET",
         "http://127.0.0.1",
         map[string]string{},
@@ -66,12 +68,18 @@ func main() {
         }
 
         if v[0] == '-' {
-            if v == "-j" || (len(v) > 5 && v[:6] == "--json") {
+            if v == "-j" || v == "--json" {
                 param.IsJson = true
-            } else if v == "-f" || (len(v) > 5 && v[:6] == "--form") {
+                continue
+            } else if v == "-f" || v == "--form" {
                 param.IsJson = false
+                continue
             }
-            continue
+
+            if v == "-v" || v == "--verbose" {
+                param.Verbose = true
+                continue
+            }
         }
 
         if len(v) > 7 && v[:7] == "http://" {
@@ -158,7 +166,10 @@ func HttpRequest(param Param) {
         os.Exit(1)
     }
 
+    request.Header.Set("Accept", "*/*")
+    request.Header.Set("Accept-Encoding", "gzip")
     request.Header.Set("User-Agent", fmt.Sprintf("HAT/%s (i@likexian.com)", Version()))
+
     if param.Method == "POST" || param.Method == "PUT" {
         if param.IsJson {
             request.Header.Set("Accept", "application/json")
@@ -181,6 +192,27 @@ func HttpRequest(param Param) {
     }
     defer response.Body.Close()
 
+    if param.Verbose {
+        path := request.URL.Path
+        if path == "" {
+            path = "/"
+        }
+
+        header := fmt.Sprintf("> %s %s HTTP/1.1\r\n", param.Method, path)
+        header += fmt.Sprintf("> Host: %s\r\n", request.URL.Host)
+        for k, v := range request.Header {
+            header += fmt.Sprintf("> %s: %s\r\n", k, v[0])
+        }
+
+        fmt.Print(header)
+        fmt.Print("> \r\n")
+
+        if body != "" {
+            fmt.Print(body)
+            fmt.Print("> \r\n")
+        }
+    }
+
     is_json := false
     for k, v := range response.Header {
         if k == "Content-Type" {
@@ -190,6 +222,13 @@ func HttpRequest(param Param) {
                 break
             }
         }
+    }
+
+    if param.Verbose {
+        for k, v := range response.Header {
+            fmt.Print(fmt.Sprintf("< %s: %s\r\n", k, v[0]))
+        }
+        fmt.Print("< \r\n")
     }
 
     data, err := ioutil.ReadAll(response.Body)
