@@ -1,3 +1,12 @@
+/*
+ * A CLI tool for HTTP API Testing
+ * http://www.likexian.com/
+ *
+ * Copyright 2014, Kexian Li
+ * Released under the Apache License, Version 2.0
+ *
+ */
+
 package main
 
 
