@@ -25,8 +25,9 @@ import (
 
 
 type Param struct {
-    IsJson  bool                `json:"is_json"`
     Verbose bool                `json:"verbose"`
+    Timeout int                 `json:"timeout"`
+    IsJson  bool                `json:"is_json"`
     Method  string              `json:"method"`
     URL     string              `json:"url"`
     Header  map[string]string   `json:"header"`
@@ -35,7 +36,7 @@ type Param struct {
 
 
 func Version() string {
-    return "0.2.0"
+    return "0.3.0"
 }
 
 
@@ -51,7 +52,8 @@ func License() string {
 
 func main() {
     param := Param{
-        true,
+        false,
+        30,
         false,
         "GET",
         "http://127.0.0.1",
@@ -78,6 +80,16 @@ func main() {
 
             if v == "-v" || v == "--verbose" {
                 param.Verbose = true
+                continue
+            }
+
+            if len(v) > 10 && v[:10] == "--timeout=" {
+                timeout, err := strconv.Atoi(v[10:])
+                if err != nil {
+                    fmt.Println(err)
+                    os.Exit(1)
+                }
+                param.Timeout = timeout
                 continue
             }
         }
@@ -184,7 +196,7 @@ func HttpRequest(param Param) {
         request.Header.Set(k, v)
     }
 
-    client := &http.Client{Timeout: 30 * time.Second}
+    client := &http.Client{Timeout: time.Duration(param.Timeout) * time.Second}
     response, err := client.Do(request)
     if err != nil {
         fmt.Println(err)
