@@ -27,6 +27,14 @@ FLAGS specify data type of POST and PUT
     -j, --json  POST/PUT data as json encode (default)
     -f, --form  POST/PUT data as form encode
 
+FLAGS specify verbose
+
+    -v, --verbose
+
+FLAGS specify request and response total timeout
+
+    --timeout=<int>
+
 ### METHOD
 
 METHOD specify http request method
