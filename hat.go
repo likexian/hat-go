@@ -34,7 +34,7 @@ type Param struct {
 
 
 func Version() string {
-    return "0.1.0"
+    return "0.1.1"
 }
 
 
@@ -49,13 +49,28 @@ func License() string {
 
 
 func main() {
-    param := Param{true, "GET", "http://127.0.0.1", map[string]string{}, map[string]string{}}
+    param := Param{
+        true,
+        "GET",
+        "http://127.0.0.1",
+        map[string]string{},
+        map[string]string{},
+    }
 
     args := os.Args
     for i:=1; i<len(args); i++ {
         v := args[i]
-        if v[:1] == ":" || v[:1] == "/" {
+        if v[0] == ':' || v[0] == '/' {
             param.URL += v
+            continue
+        }
+
+        if v[0] == '-' {
+            if v == "-j" || (len(v) > 5 && v[:6] == "--json") {
+                param.IsJson = true
+            } else if v == "-f" || (len(v) > 5 && v[:6] == "--form") {
+                param.IsJson = false
+            }
             continue
         }
 
@@ -64,14 +79,6 @@ func main() {
             continue
         } else if len(v) > 8 && v[:8] == "https://" {
             param.URL = v
-            continue
-        }
-
-        if v == "-j" || (len(v) > 5 && v[:6] == "--json") {
-            param.IsJson = true
-            continue
-        } else if v == "-f" || (len(v) > 5 && v[:6] == "--form") {
-            param.IsJson = false
             continue
         }
 

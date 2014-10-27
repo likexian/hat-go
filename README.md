@@ -6,7 +6,7 @@ A CLI tool for HTTP API Testing
 
 ## Overview
 
-HAT (HTTP API Testing) is a command line HTTP client. Its goal is to make HTTP API testing as easy as possible. It providers powerful ablitity to make HTTP request but with very simple argsments. HAT can be used for HTTP API testing, debugging and you can as well use it as CURL.
+HAT (HTTP API Testing) is a command line HTTP client. Its goal is to make HTTP API testing as easy as possible. It providers powerful ablitity to make HTTP request but with very simple arguments. HAT can be used for HTTP API testing, debugging and you can as well use it as CURL.
 
 ## Documentation
 
@@ -14,7 +14,7 @@ hat [FLAGS] [METHOD] [URL] [OPTIONS]
 
 ### Base usage
 
-HAT is so powerful that it work without any argsments.
+HAT is so powerful that it work without any arguments.
 
     hat
 
