@@ -37,7 +37,7 @@ type Param struct {
 
 
 func Version() string {
-    return "0.4.0"
+    return "0.4.1"
 }
 
 
@@ -247,6 +247,7 @@ func HttpRequest(param Param) {
     }
 
     if param.Verbose {
+        fmt.Print(fmt.Sprintf("< %s %s\r\n", response.Proto, response.Status))
         for k, v := range response.Header {
             fmt.Print(fmt.Sprintf("< %s: %s\r\n", k, v[0]))
         }
@@ -285,10 +286,9 @@ func HttpRequest(param Param) {
         fmt.Println("")
         fmt.Println(fmt.Sprintf("request:\t%.2fs", float64(w_time) / 1000.0))
         fmt.Println(fmt.Sprintf("response:\t%.2fs", float64(r_time) / 1000.0))
-        if (r_time > 0) {
-            fmt.Println(fmt.Sprintf("download:\t%dk/s", int64(len(r_body) * 1000 / 1024) / r_time))
-        } else {
-            fmt.Println(fmt.Sprintf("download:\t%dk/s", len(r_body) / 1024))
+        if (r_time == 0) {
+            r_time = 1
         }
+        fmt.Println(fmt.Sprintf("download:\t%dk/s", int64(len(r_body) * 1000 / 1024) / r_time))
     }
 }
