@@ -26,6 +26,7 @@ import (
 
 type Param struct {
     Verbose bool                `json:"verbose"`
+    Timer   bool                `json:"timer"`
     Timeout int                 `json:"timeout"`
     IsJson  bool                `json:"is_json"`
     Method  string              `json:"method"`
@@ -36,7 +37,7 @@ type Param struct {
 
 
 func Version() string {
-    return "0.3.0"
+    return "0.4.0"
 }
 
 
@@ -52,6 +53,7 @@ func License() string {
 
 func main() {
     param := Param{
+        false,
         false,
         30,
         false,
@@ -83,6 +85,11 @@ func main() {
                 continue
             }
 
+            if v == "-t" {
+                param.Timer = true
+                continue
+            }
+
             if len(v) > 10 && v[:10] == "--timeout=" {
                 timeout, err := strconv.Atoi(v[10:])
                 if err != nil {
@@ -92,6 +99,7 @@ func main() {
                 param.Timeout = timeout
                 continue
             }
+            continue
         }
 
         if len(v) > 7 && v[:7] == "http://" {
@@ -150,7 +158,7 @@ func HttpRequest(param Param) {
         param.URL = "http://" + param.URL
     }
 
-    body := ""
+    w_body := ""
     if param.Method == "POST" || param.Method == "PUT" {
         if param.IsJson {
             data_json := simplejson.New()
@@ -162,24 +170,23 @@ func HttpRequest(param Param) {
                 fmt.Println(err)
                 os.Exit(1)
             }
-            body = data
+            w_body = data
         } else {
             data := url.Values{}
             for k, v := range param.Data {
                 data.Add(k, v)
             }
-            body = data.Encode()
+            w_body = data.Encode()
         }
     }
 
-    request, err := http.NewRequest(param.Method, param.URL, bytes.NewBuffer([]byte(body)))
+    request, err := http.NewRequest(param.Method, param.URL, bytes.NewBuffer([]byte(w_body)))
     if err != nil {
         fmt.Println(err)
         os.Exit(1)
     }
 
     request.Header.Set("Accept", "*/*")
-    request.Header.Set("Accept-Encoding", "gzip")
     request.Header.Set("User-Agent", fmt.Sprintf("HAT/%s (i@likexian.com)", Version()))
 
     if param.Method == "POST" || param.Method == "PUT" {
@@ -197,7 +204,9 @@ func HttpRequest(param Param) {
     }
 
     client := &http.Client{Timeout: time.Duration(param.Timeout) * time.Second}
+    w_start_time := time.Now().UnixNano() / 1e6
     response, err := client.Do(request)
+    w_end_time := time.Now().UnixNano() / 1e6
     if err != nil {
         fmt.Println(err)
         os.Exit(1)
@@ -212,6 +221,7 @@ func HttpRequest(param Param) {
 
         header := fmt.Sprintf("> %s %s HTTP/1.1\r\n", param.Method, path)
         header += fmt.Sprintf("> Host: %s\r\n", request.URL.Host)
+        header += "> Accept-Encoding: gzip\r\n"
         for k, v := range request.Header {
             header += fmt.Sprintf("> %s: %s\r\n", k, v[0])
         }
@@ -219,8 +229,8 @@ func HttpRequest(param Param) {
         fmt.Print(header)
         fmt.Print("> \r\n")
 
-        if body != "" {
-            fmt.Print(body)
+        if w_body != "" {
+            fmt.Print(w_body)
             fmt.Print("> \r\n")
         }
     }
@@ -243,13 +253,15 @@ func HttpRequest(param Param) {
         fmt.Print("< \r\n")
     }
 
-    data, err := ioutil.ReadAll(response.Body)
+    r_start_time := time.Now().UnixNano() / 1e6
+    r_body, err := ioutil.ReadAll(response.Body)
+    r_end_time := time.Now().UnixNano() / 1e6
     if err != nil {
         fmt.Println(err)
         os.Exit(1)
     }
 
-    text := string(data)
+    text := string(r_body)
     if is_json {
         data, err := simplejson.Loads(text)
         if err != nil {
@@ -267,4 +279,16 @@ func HttpRequest(param Param) {
     }
 
     fmt.Println(text)
+    if param.Timer {
+        w_time := w_end_time - w_start_time
+        r_time := r_end_time - r_start_time
+        fmt.Println("")
+        fmt.Println(fmt.Sprintf("request:\t%.2fs", float64(w_time) / 1000.0))
+        fmt.Println(fmt.Sprintf("response:\t%.2fs", float64(r_time) / 1000.0))
+        if (r_time > 0) {
+            fmt.Println(fmt.Sprintf("download:\t%dk/s", int64(len(r_body) * 1000 / 1024) / r_time))
+        } else {
+            fmt.Println(fmt.Sprintf("download:\t%dk/s", len(r_body) / 1024))
+        }
+    }
 }
