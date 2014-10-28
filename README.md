@@ -31,6 +31,10 @@ FLAGS specify verbose
 
     -v, --verbose
 
+FLAGS specify show request/response time and download speed
+
+    -t
+
 FLAGS specify request and response total timeout
 
     --timeout=<int>
