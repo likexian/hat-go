@@ -32,12 +32,13 @@ type Param struct {
     Method  string              `json:"method"`
     URL     string              `json:"url"`
     Header  map[string]string   `json:"header"`
+    Query   map[string]string   `json:"query"`
     Data    map[string]string   `json:"data"`
 }
 
 
 func Version() string {
-    return "0.4.3"
+    return "0.5.0"
 }
 
 
@@ -59,6 +60,7 @@ func main() {
         true,
         "GET",
         "http://127.0.0.1",
+        map[string]string{},
         map[string]string{},
         map[string]string{},
     }
@@ -118,14 +120,20 @@ func main() {
             }
         }
 
+        if strings.Contains(v, "?=") {
+            vv := strings.SplitN(v, "?=", 2)
+            if !strings.Contains(vv[0], "=") && !strings.Contains(vv[0], ":") {
+                param.Query[vv[0]] = vv[1]
+                continue
+            }
+        }
+
         if strings.Contains(v, "=") {
             vv := strings.SplitN(v, "=", 2)
-            if strings.Contains(vv[0], ":") {
-                param.Header[vv[0]] = vv[1]
-            } else {
+            if !strings.Contains(vv[0], ":") {
                 param.Data[vv[0]] = vv[1]
+                continue
             }
-            continue
         }
 
         if strings.Contains(v, ":") {
@@ -156,6 +164,20 @@ func main() {
 func HttpRequest(param Param) {
     if len(param.URL) <= 7 || (param.URL[:8] != "https://" && param.URL[:7] != "http://") {
         param.URL = "http://" + param.URL
+    }
+
+    q_data := url.Values{}
+    for k, v := range param.Query {
+        q_data.Add(k, v)
+    }
+
+    q_query := q_data.Encode()
+    if q_query != "" {
+        if !strings.Contains(param.URL, "?") {
+            param.URL += "?" + q_query
+        } else {
+            param.URL += "&" + q_query
+        }
     }
 
     w_body := ""
@@ -219,7 +241,12 @@ func HttpRequest(param Param) {
             path = "/"
         }
 
-        header := fmt.Sprintf("> %s %s HTTP/1.1\r\n", param.Method, path)
+        query := request.URL.RawQuery
+        if query != "" {
+            query = "?" + query
+        }
+
+        header := fmt.Sprintf("> %s %s%s HTTP/1.1\r\n", param.Method, path, query)
         header += fmt.Sprintf("> Host: %s\r\n", request.URL.Host)
         header += "> Accept-Encoding: gzip\r\n"
         for k, v := range request.Header {
