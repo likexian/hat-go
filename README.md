@@ -18,7 +18,7 @@ HAT is so powerful that it work without any arguments.
 
     hat
 
-This will make a get request to http://127.0.0.1/.
+*=> This will make a GET request to http://127.0.0.1/.*
 
 ### FLAGS
 
@@ -59,16 +59,23 @@ URL is the HTTP URL for request, support http and https
 
 ### OPTIONS
 
-OPTIONS can specify the HTTP headers and HTTP body
+OPTIONS can specify the HTTP headers and HTTP body, add as many as you want
 
-    key:value   HTTP headers, add as many as you want, for example User-Agent:HAT/0.1.0
-    key=value   HTTP body, add as many as you want, for example name=likexian
+    key:value   HTTP headers   for example User-Agent:HAT/0.1.0
+    key=value   HTTP body      for example name=likexian
+    key?=value  HTTP query     for example name?=likexian set URL to /?name=likexian
 
 ## EXAMPLE
 
 Just get a url
 
     hat http://www.likexian.com
+
+Get a url and specify the query
+
+    hat http://www.likexian.com name?=likexian pass?=xxxxxxxx
+
+*=> This will make a GET request to http://www.likexian.com/?name=likexian&pass=xxxxxxxx*
 
 Get a url and specify the headers
 
