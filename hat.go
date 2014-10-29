@@ -37,7 +37,7 @@ type Param struct {
 
 
 func Version() string {
-    return "0.4.2"
+    return "0.4.3"
 }
 
 
@@ -56,7 +56,7 @@ func main() {
         false,
         false,
         30,
-        false,
+        true,
         "GET",
         "http://127.0.0.1",
         map[string]string{},
