@@ -38,7 +38,7 @@ type Param struct {
 
 
 func Version() string {
-    return "0.5.0"
+    return "0.5.1"
 }
 
 
@@ -181,6 +181,7 @@ func HttpRequest(param Param) {
     }
 
     w_body := ""
+    v_w_body := ""
     if param.Method == "POST" || param.Method == "PUT" {
         if param.IsJson {
             data_json := simplejson.New()
@@ -193,12 +194,17 @@ func HttpRequest(param Param) {
                 os.Exit(1)
             }
             w_body = data
+            v_w_body, err = simplejson.PrettyDumps(data_json)
+            if err != nil {
+                v_w_body = w_body
+            }
         } else {
             data := url.Values{}
             for k, v := range param.Data {
                 data.Add(k, v)
             }
             w_body = data.Encode()
+            v_w_body = w_body
         }
     }
 
@@ -254,11 +260,11 @@ func HttpRequest(param Param) {
         }
 
         fmt.Print(header)
-        fmt.Print("> \r\n")
+        fmt.Println(">")
 
         if w_body != "" {
-            fmt.Println(w_body)
-            fmt.Print("> \r\n")
+            fmt.Println(v_w_body)
+            fmt.Println(">")
         }
     }
 
