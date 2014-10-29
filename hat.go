@@ -37,7 +37,7 @@ type Param struct {
 
 
 func Version() string {
-    return "0.4.1"
+    return "0.4.2"
 }
 
 
@@ -119,7 +119,7 @@ func main() {
         }
 
         if strings.Contains(v, "=") {
-            vv := strings.Split(v, "=")
+            vv := strings.SplitN(v, "=", 2)
             if strings.Contains(vv[0], ":") {
                 param.Header[vv[0]] = vv[1]
             } else {
@@ -129,10 +129,10 @@ func main() {
         }
 
         if strings.Contains(v, ":") {
-            vv := strings.Split(v, ":")
+            vv := strings.SplitN(v, ":", 2)
             _v := vv[1]
             if strings.Contains(vv[1], "/") {
-                _vv := strings.Split(vv[1], "/")
+                _vv := strings.SplitN(vv[1], "/", 2)
                 _v = _vv[0]
             }
             if len(_v) > 0 && len(_v) < 6 {
@@ -230,7 +230,7 @@ func HttpRequest(param Param) {
         fmt.Print("> \r\n")
 
         if w_body != "" {
-            fmt.Print(w_body)
+            fmt.Println(w_body)
             fmt.Print("> \r\n")
         }
     }
