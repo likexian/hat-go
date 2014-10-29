@@ -39,14 +39,22 @@ FLAGS specify request and response total timeout
 
     --timeout=<int>
 
+FLAGS specify show the version
+
+    -V, --version
+
+FLAGS specify show the help
+
+    -h, --help
+
 ### METHOD
 
 METHOD specify http request method
 
-    GET         HTTP GET    GET / HTTP/1.1 (default)
-    POST        HTTP POST   POST / HTTP/1.1
-    PUT         HTTP PUT    PUT / HTTP/1.1
-    DELETE      HTTP DELETE DELETE / HTTP/1.1
+    GET         HTTP GET        GET / HTTP/1.1 (default)
+    POST        HTTP POST       POST / HTTP/1.1
+    PUT         HTTP PUT        PUT / HTTP/1.1
+    DELETE      HTTP DELETE     DELETE / HTTP/1.1
 
 ### URL
 
@@ -61,9 +69,9 @@ URL is the HTTP URL for request, support http and https
 
 OPTIONS can specify the HTTP headers and HTTP body, add as many as you want
 
-    key:value   HTTP headers   for example User-Agent:HAT/0.1.0
-    key=value   HTTP body      for example name=likexian
-    key?=value  HTTP query     for example name?=likexian set URL to /?name=likexian
+    key:value   HTTP headers    for example User-Agent:HAT/0.1.0
+    key=value   HTTP body       for example name=likexian
+    key?=value  HTTP query      for example name?=likexian set URL to /?name=likexian
 
 ## EXAMPLE
 

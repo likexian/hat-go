@@ -24,6 +24,50 @@ import (
 )
 
 
+const (
+    VERSION = "0.6.0"
+    HELP_INFO = `Usage:
+    hat [FLAGS] [METHOD] [URL] [OPTIONS]
+
+FLAGS: specify data type of POST and PUT
+    -j, --json  POST/PUT data as json encode (default)
+    -f, --form  POST/PUT data as form encode
+
+FLAGS specify verbose
+    -v, --verbose
+
+FLAGS specify show request/response time and download speed
+    -t
+
+FLAGS specify request and response total timeout
+    --timeout=<int>
+
+FLAGS specify show the version
+    -V, --version
+
+FLAGS specify show the help
+    -h, --help
+
+METHOD: specify http request method
+    GET         HTTP GET        GET / HTTP/1.1 (default)
+    POST        HTTP POST       POST / HTTP/1.1
+    PUT         HTTP PUT        PUT / HTTP/1.1
+    DELETE      HTTP DELETE     DELETE / HTTP/1.1
+
+URL: the HTTP URL for request, support http and https
+    <empty>     for http://127.0.0.1/ (default)
+    :8080       for http://127.0.0.1:8080/
+    :8080/api/  for http://127.0.0.1:8080/api/
+    /api/       for http://127.0.0.1/api/
+
+OPTIONS: the HTTP headers and HTTP body, add as many as you want
+    key:value   HTTP headers    for example User-Agent:HAT/0.1.0
+    key=value   HTTP body       for example name=likexian
+    key?=value  HTTP query      for example name?=likexian set URL to /?name=likexian
+`
+)
+
+
 type Param struct {
     Verbose bool                `json:"verbose"`
     Timer   bool                `json:"timer"`
@@ -38,12 +82,17 @@ type Param struct {
 
 
 func Version() string {
-    return "0.5.1"
+    return VERSION
 }
 
 
 func Author() string {
     return "[Li Kexian](http://www.likexian.com/)"
+}
+
+
+func Copyright() string {
+    return "Copyright 2014, Kexian Li"
 }
 
 
@@ -101,6 +150,19 @@ func main() {
                 param.Timeout = timeout
                 continue
             }
+
+            if v == "-V" || v == "--version" {
+                fmt.Println("HAT version " + Version())
+                fmt.Println(Copyright())
+                fmt.Println(License())
+                os.Exit(0)
+            }
+
+            if v == "-h" || v == "--help" {
+                fmt.Println(HELP_INFO)
+                os.Exit(0)
+            }
+
             continue
         }
 
