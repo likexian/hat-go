@@ -25,6 +25,7 @@ func TestSimplejson(t *testing.T) {
         "https://api.github.com/",
         map[string]string{},
         map[string]string{},
+        map[string]string{},
     }
 
     HttpRequest(param)
