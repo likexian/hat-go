@@ -25,7 +25,7 @@ import (
 
 
 const (
-    VERSION = "0.6.0"
+    VERSION = "0.7.0"
     HELP_INFO = `Usage:
     hat [FLAGS] [METHOD] [URL] [OPTIONS]
 
@@ -166,20 +166,20 @@ func main() {
             continue
         }
 
+        if len(v) < 7 {
+            _v := strings.ToUpper(v)
+            if _v == "GET" || _v == "POST" || _v == "PUT" || _v == "DELETE" {
+                param.Method = _v
+                continue
+            }
+        }
+
         if len(v) > 7 && v[:7] == "http://" {
             param.URL = v
             continue
         } else if len(v) > 8 && v[:8] == "https://" {
             param.URL = v
             continue
-        }
-
-        if len(v) < 6 {
-            _v := strings.ToUpper(v)
-            if _v == "GET" || _v == "POST" || _v == "PUT" || _v == "DELETE" {
-                param.Method = _v
-                continue
-            }
         }
 
         if strings.Contains(v, "?=") {
