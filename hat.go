@@ -65,6 +65,7 @@ OPTIONS: the HTTP headers and HTTP body, add as many as you want
     key=value   HTTP body       for example name=likexian
     key?=value  HTTP query      for example name?=likexian set URL to /?name=likexian
 `
+    URL_DEFAULT = "http://127.0.0.1"
 )
 
 
@@ -108,7 +109,7 @@ func main() {
         30,
         true,
         "GET",
-        "http://127.0.0.1",
+        URL_DEFAULT,
         map[string]string{},
         map[string]string{},
         map[string]string{},
@@ -118,7 +119,7 @@ func main() {
     for i:=1; i<len(args); i++ {
         v := args[i]
         if v[0] == ':' || v[0] == '/' {
-            param.URL += v
+            param.URL = URL_DEFAULT + v
             continue
         }
 
