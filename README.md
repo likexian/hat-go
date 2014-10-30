@@ -14,7 +14,7 @@ hat [FLAGS] [METHOD] [URL] [OPTIONS]
 
 ### Base usage
 
-HAT is so powerful that it work without any arguments.
+HAT is so powerful that it works without any arguments.
 
     hat
 
@@ -67,7 +67,7 @@ URL is the HTTP URL for request, support http and https
 
 ### OPTIONS
 
-OPTIONS can specify the HTTP headers and HTTP body, add as many as you want
+OPTIONS can specify the HTTP headers, HTTP body and HTTP URL query, add as many as you want
 
     key:value   HTTP headers    for example User-Agent:HAT/0.1.0
     key=value   HTTP body       for example name=likexian
@@ -77,25 +77,25 @@ OPTIONS can specify the HTTP headers and HTTP body, add as many as you want
 
 Just get a url
 
-    hat http://www.likexian.com
+    hat http://127.0.0.1/
 
 Get a url and specify the query
 
-    hat http://www.likexian.com name?=likexian pass?=xxxxxxxx
+    hat http://127.0.0.1/ name?=likexian pass?=xxxxxxxx
 
-*=> This will make a GET request to http://www.likexian.com/?name=likexian&pass=xxxxxxxx*
+*=> This will make a GET request to http://127.0.0.1/?name=likexian&pass=xxxxxxxx*
 
 Get a url and specify the headers
 
-    hat http://www.likexian.com User-Agent:HAT/0.1.0 X-Forward-For:192.168.1.1
+    hat http://127.0.0.1/ User-Agent:HAT/0.1.0 X-Forward-For:192.168.1.1
 
 POST data to url (json)
 
-    hat post http://www.likexian.com/api/user name=likexian pass=xxxxxxxx
+    hat post http://127.0.0.1/api/user name=likexian pass=xxxxxxxx
 
 POST data to url (form)
 
-    hat -f post http://www.likexian.com/api/user name=likexian pass=xxxxxxxx
+    hat -f post http://127.0.0.1/api/user name=likexian pass=xxxxxxxx
 
 ## LICENSE
 
