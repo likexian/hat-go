@@ -8,6 +8,23 @@ A CLI tool for HTTP API Testing
 
 HAT (HTTP API Testing) is a command line HTTP client. Its goal is to make HTTP API testing as easy as possible. It providers powerful ablitity to make HTTP request but with very simple arguments. HAT can be used for HTTP API testing, debugging and you can as well use it as CURL.
 
+## Install
+
+### Download
+
+- OSX: https://github.com/likexian/hat-go/releases/download/v0.7.0/hat_osx_0.7.0.tar.gz
+- Linux 32Bit: https://github.com/likexian/hat-go/releases/download/v0.7.0/hat_linux_x86_0.7.0.tar.gz
+- Linux 64Bit: https://github.com/likexian/hat-go/releases/download/v0.7.0/hat_linux_x86_64.0.7.0.tar.gz
+
+### Untar and move
+
+    tar zxvf hat_*_0.7.0.tar.gz
+    sudo mv hat /usr/local/bin
+
+### Test it
+
+    hat --version
+
 ## Documentation
 
 hat [FLAGS] [METHOD] [URL] [OPTIONS]
