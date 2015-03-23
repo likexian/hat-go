@@ -116,11 +116,10 @@ POST data to url (form)
 
 ## LICENSE
 
-Copyright 2014, Kexian Li
+Copyright 2014-2015, Li Kexian
 
 Apache License, Version 2.0
 
 ## About
 
-- [Kexian Li](http://github.com/likexian)
-- [http://www.likexian.com/](http://www.likexian.com/)
+- [Li Kexian](http://www.likexian.com/)
