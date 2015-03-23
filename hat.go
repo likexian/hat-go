@@ -20,12 +20,13 @@ import (
     "strconv"
     "net/url"
     "time"
+    "errors"
     "github.com/likexian/simplejson-go"
 )
 
 
 const (
-    VERSION = "0.7.0"
+    VERSION = "0.7.1"
     HELP_INFO = `Usage:
     hat [FLAGS] [METHOD] [URL] [OPTIONS]
 
@@ -294,13 +295,22 @@ func HttpRequest(param Param) {
         request.Header.Set(k, v)
     }
 
+    redirect_policy_error := errors.New("Catch HTTP Redirect")
     client := &http.Client{Timeout: time.Duration(param.Timeout) * time.Second}
+    client.CheckRedirect = func(req *http.Request, via []*http.Request) error {
+        return redirect_policy_error
+    }
+
     w_start_time := time.Now().UnixNano() / 1e6
     response, err := client.Do(request)
     w_end_time := time.Now().UnixNano() / 1e6
     if err != nil {
-        fmt.Println(err)
-        os.Exit(1)
+        if uerr, ok := err.(*url.Error); ok {
+            if uerr.Err != redirect_policy_error {
+                fmt.Println(err)
+                os.Exit(1)
+            }
+        }
     }
     defer response.Body.Close()
 
@@ -354,8 +364,11 @@ func HttpRequest(param Param) {
     r_body, err := ioutil.ReadAll(response.Body)
     r_end_time := time.Now().UnixNano() / 1e6
     if err != nil {
-        fmt.Println(err)
-        os.Exit(1)
+        // May I say four-letter word?
+        if fmt.Sprintf("%s", err) != "http: read on closed response body" {
+            fmt.Println(err)
+            os.Exit(1)
+        }
     }
 
     text := string(r_body)
