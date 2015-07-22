@@ -26,7 +26,7 @@ import (
 
 
 const (
-    VERSION = "0.7.1"
+    VERSION = "0.7.2"
     HELP_INFO = `Usage:
     hat [FLAGS] [METHOD] [URL] [OPTIONS]
 
@@ -214,7 +214,7 @@ func main() {
                     continue
                 }
             }
-            param.Header[vv[0]] = vv[1]
+            param.Header[strings.ToLower(vv[0])] = vv[1]
             continue
         }
 
@@ -292,7 +292,11 @@ func HttpRequest(param Param) {
     }
 
     for k, v := range param.Header {
-        request.Header.Set(k, v)
+        if k == "host" {
+            request.Host = v
+        } else {
+            request.Header.Set(k, v)
+        }
     }
 
     redirect_policy_error := errors.New("Catch HTTP Redirect")
@@ -326,11 +330,11 @@ func HttpRequest(param Param) {
         }
 
         header := fmt.Sprintf("> %s %s%s HTTP/1.1\r\n", param.Method, path, query)
-        header += fmt.Sprintf("> Host: %s\r\n", request.URL.Host)
         header += "> Accept-Encoding: gzip\r\n"
         for k, v := range request.Header {
             header += fmt.Sprintf("> %s: %s\r\n", k, v[0])
         }
+        header += fmt.Sprintf("> Host: %s\r\n", request.Host)
 
         fmt.Print(header)
         fmt.Println(">")
