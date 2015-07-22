@@ -1,6 +1,6 @@
 /*
  * A CLI tool for HTTP API Testing
- * http://www.likexian.com/
+ * https://www.likexian.com/
  *
  * Copyright 2014-2015, Li Kexian
  * Released under the Apache License, Version 2.0
@@ -89,7 +89,7 @@ func Version() string {
 
 
 func Author() string {
-    return "[Li Kexian](http://www.likexian.com/)"
+    return "[Li Kexian](https://www.likexian.com/)"
 }
 
 
