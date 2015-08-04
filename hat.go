@@ -26,7 +26,7 @@ import (
 
 
 const (
-    VERSION = "0.7.2"
+    VERSION = "0.8.0"
     HELP_INFO = `Usage:
     hat [FLAGS] [METHOD] [URL] [OPTIONS]
 
@@ -80,6 +80,7 @@ type Param struct {
     Header  map[string]string   `json:"header"`
     Query   map[string]string   `json:"query"`
     Data    map[string]string   `json:"data"`
+    RawData string              `json:"raw_data"`
 }
 
 
@@ -114,6 +115,7 @@ func main() {
         map[string]string{},
         map[string]string{},
         map[string]string{},
+        "",
     }
 
     args := os.Args
@@ -124,7 +126,25 @@ func main() {
             continue
         }
 
-        if v[0] == '-' {
+        if v[0] == '@' {
+            b_text, err := ioutil.ReadFile(v[1:])
+            if err != nil {
+                fmt.Println(err)
+                os.Exit(1)
+            }
+            text := string(b_text)
+
+            param.IsJson = false
+            if text != "" && (text[0] == '{' || text[0] == '[') && (text[len(text) - 1] == '}' || text[len(text) - 1] == ']') {
+                _, err := simplejson.Loads(text)
+                if err == nil {
+                    param.IsJson = true
+                }
+            }
+            param.Method = "POST"
+            param.RawData = text
+            continue
+        } else if v[0] == '-' {
             if v == "-j" || v == "--json" {
                 param.IsJson = true
                 continue
@@ -247,28 +267,33 @@ func HttpRequest(param Param) {
     w_body := ""
     v_w_body := ""
     if param.Method == "POST" || param.Method == "PUT" {
-        if param.IsJson {
-            data_json := simplejson.New()
-            for k, v := range param.Data {
-                data_json.Set(k, v)
-            }
-            data, err := simplejson.Dumps(data_json)
-            if err != nil {
-                fmt.Println(err)
-                os.Exit(1)
-            }
-            w_body = data
-            v_w_body, err = simplejson.PrettyDumps(data_json)
-            if err != nil {
+        if (param.RawData != "") {
+            w_body = param.RawData
+            v_w_body = w_body
+        } else {
+            if param.IsJson {
+                data_json := simplejson.New()
+                for k, v := range param.Data {
+                    data_json.Set(k, v)
+                }
+                data, err := simplejson.Dumps(data_json)
+                if err != nil {
+                    fmt.Println(err)
+                    os.Exit(1)
+                }
+                w_body = data
+                v_w_body, err = simplejson.PrettyDumps(data_json)
+                if err != nil {
+                    v_w_body = w_body
+                }
+            } else {
+                data := url.Values{}
+                for k, v := range param.Data {
+                    data.Add(k, v)
+                }
+                w_body = data.Encode()
                 v_w_body = w_body
             }
-        } else {
-            data := url.Values{}
-            for k, v := range param.Data {
-                data.Add(k, v)
-            }
-            w_body = data.Encode()
-            v_w_body = w_body
         }
     }
 
