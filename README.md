@@ -12,13 +12,13 @@ HAT (HTTP API Testing) is a command line HTTP client. Its goal is to make HTTP A
 
 ### Download
 
-- OSX: https://github.com/likexian/hat-go/releases/download/v0.7.0/hat_osx_0.7.0.tar.gz
-- Linux 32Bit: https://github.com/likexian/hat-go/releases/download/v0.7.0/hat_linux_x86_0.7.0.tar.gz
-- Linux 64Bit: https://github.com/likexian/hat-go/releases/download/v0.7.0/hat_linux_x86_64.0.7.0.tar.gz
+- OSX: https://github.com/likexian/hat-go/releases/download/v0.8.2/hat_osx_0.8.2.tar.gz
+- Linux 32Bit: https://github.com/likexian/hat-go/releases/download/v0.8.2/hat_linux_x86_0.8.2.tar.gz
+- Linux 64Bit: https://github.com/likexian/hat-go/releases/download/v0.8.2/hat_linux_x86_64_0.8.2.tar.gz
 
 ### Untar and move
 
-    tar zxvf hat_*_0.7.0.tar.gz
+    tar zxvf hat_*_0.8.2.tar.gz
     sudo mv hat /usr/local/bin
 
 ### Test it
@@ -86,9 +86,10 @@ URL is the HTTP URL for request, support http and https
 
 OPTIONS can specify the HTTP headers, HTTP body and HTTP URL query, add as many as you want
 
-    key:value   HTTP headers    for example User-Agent:HAT/0.1.0
-    key=value   HTTP body       for example name=likexian
-    key?=value  HTTP query      for example name?=likexian set URL to /?name=likexian
+    key:value   HTTP headers        for example User-Agent:HAT/0.1.0
+    key=value   HTTP body           for example name=likexian
+    key?=value  HTTP query          for example name?=likexian set URL to /?name=likexian
+    @file       HTTP POST/PUT Data  for example @post.json will use post.json content as post/put body data
 
 ## EXAMPLE
 
@@ -113,6 +114,17 @@ POST data to url (json)
 POST data to url (form)
 
     hat -f post http://127.0.0.1/api/user name=likexian pass=xxxxxxxx
+
+POST file content as raw body data
+
+    hat @post.json http://127.0.0.1/api/user
+
+PUT file content as raw body data
+
+    hat @post.json put http://127.0.0.1/api/user/1
+
+*=> If you are using the @file option as above, the content-type will be set depending on the format of the file,
+content-type will be json if the content is json (same as -f) formating, otherwise form (as -f).*
 
 ## LICENSE
 

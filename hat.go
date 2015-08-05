@@ -26,7 +26,7 @@ import (
 
 
 const (
-    VERSION = "0.8.1"
+    VERSION = "0.8.2"
     HELP_INFO = `Usage:
     hat [FLAGS] [METHOD] [URL] [OPTIONS]
 
