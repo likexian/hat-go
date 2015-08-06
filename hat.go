@@ -26,7 +26,7 @@ import (
 
 
 const (
-    VERSION = "0.8.2"
+    VERSION = "0.8.4"
     HELP_INFO = `Usage:
     hat [FLAGS] [METHOD] [URL] [OPTIONS]
 
@@ -357,7 +357,9 @@ func HttpRequest(param Param) {
 
         header := fmt.Sprintf("> %s %s%s HTTP/1.1\r\n", param.Method, path, query)
         header += "> Accept-Encoding: gzip\r\n"
-        header += fmt.Sprintf("> Content-Length: %d\r\n", request.ContentLength)
+        if (param.Method == "POST" || param.Method == "PUT") {
+            header += fmt.Sprintf("> Content-Length: %d\r\n", request.ContentLength)
+        }
         for k, v := range request.Header {
             header += fmt.Sprintf("> %s: %s\r\n", k, v[0])
         }
