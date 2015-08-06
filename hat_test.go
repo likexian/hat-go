@@ -26,6 +26,7 @@ func TestSimplejson(t *testing.T) {
         map[string]string{},
         map[string]string{},
         map[string]string{},
+        "",
     }
 
     HttpRequest(param)
