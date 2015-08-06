@@ -12,13 +12,13 @@ HAT (HTTP API Testing) is a command line HTTP client. Its goal is to make HTTP A
 
 ### Download
 
-- OSX: https://github.com/likexian/hat-go/releases/download/v0.8.2/hat_osx_0.8.2.tar.gz
-- Linux 32Bit: https://github.com/likexian/hat-go/releases/download/v0.8.2/hat_linux_x86_0.8.2.tar.gz
-- Linux 64Bit: https://github.com/likexian/hat-go/releases/download/v0.8.2/hat_linux_x86_64_0.8.2.tar.gz
+- OSX: https://github.com/likexian/hat-go/releases/download/v0.8.4/hat_osx_0.8.4.tar.gz
+- Linux 32Bit: https://github.com/likexian/hat-go/releases/download/v0.8.4/hat_linux_x86_0.8.4.tar.gz
+- Linux 64Bit: https://github.com/likexian/hat-go/releases/download/v0.8.4/hat_linux_x86_64_0.8.4.tar.gz
 
 ### Untar and move
 
-    tar zxvf hat_*_0.8.2.tar.gz
+    tar zxvf hat_*_0.8.4.tar.gz
     sudo mv hat /usr/local/bin
 
 ### Test it
