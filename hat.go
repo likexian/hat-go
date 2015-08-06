@@ -62,9 +62,10 @@ URL: the HTTP URL for request, support http and https
     /api/       for http://127.0.0.1/api/
 
 OPTIONS: the HTTP headers and HTTP body, add as many as you want
-    key:value   HTTP headers    for example User-Agent:HAT/0.1.0
-    key=value   HTTP body       for example name=likexian
-    key?=value  HTTP query      for example name?=likexian set URL to /?name=likexian
+    key:value   HTTP headers        for example User-Agent:HAT/0.1.0
+    key=value   HTTP body           for example name=likexian
+    key?=value  HTTP query          for example name?=likexian set URL to /?name=likexian
+    @file       HTTP POST/PUT Data  for example @post.json will use post.json content as post/put body data
 `
     URL_DEFAULT = "http://127.0.0.1"
 )
