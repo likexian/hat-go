@@ -9,25 +9,23 @@
 
 package main
 
-
 import (
-    "testing"
+	"testing"
 )
 
-
 func TestSimplejson(t *testing.T) {
-    param := Param{
-        false,
-        false,
-        30,
-        false,
-        "GET",
-        "https://api.github.com/",
-        map[string]string{},
-        map[string]string{},
-        map[string]string{},
-        "",
-    }
+	param := Param{
+		false,
+		false,
+		30,
+		false,
+		"GET",
+		"https://api.github.com/",
+		map[string]string{},
+		map[string]string{},
+		map[string]string{},
+		"",
+	}
 
-    HttpRequest(param)
+	HttpRequest(param)
 }
